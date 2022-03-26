@@ -12,15 +12,21 @@
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-4">
-                <form action="/handleExcel" method="post" enctype="multipart/form-data">
+                <form action="/handleExcel" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
                     @csrf
                     <div class="mb-3">
-                      <label for="old" class="form-label">Products to update</label>
-                      <input class="form-control" type="file" name="old">
+                      <label for="product-list" class="form-label">Product List</label>
+                      <input class="form-control @error('product-list') is-invalid @enderror" type="file" name="product-list" aria-describedby="productListValidation" required >
+                      @error('product-list')
+                        <div class="invalid-feedback" id="productListValidation">{{$message}}</div>
+                      @enderror
                     </div>
                     <div class="mb-3">
-                      <label for="new" class="form-label">Lancaster pricing</label>
-                      <input class="form-control" type="file" name="new">
+                      <label for="new-pricing" class="form-label">New pricing</label>
+                      <input class="form-control @error('new-pricing') is-invalid @enderror" type="file" name="new-pricing" aria-describedby="newPricingValidation" required>
+                      @error('new-pricing')
+                        <div class="invalid-feedback" id="newPricingValidation">{{$message}}</div>
+                      @enderror
                     </div>
                     <button class="btn btn-primary">Generate</button>
                 </form>

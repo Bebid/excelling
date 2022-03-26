@@ -19,4 +19,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/handleExcel', array(Price::class, 'import'));
+Route::post('/handleExcel', array(Price::class, 'generateNewPricing'));
