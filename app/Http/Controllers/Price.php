@@ -12,6 +12,11 @@ use Maatwebsite\Excel\HeadingRowImport;
 
 class Price extends Controller
 {
+    private $aRequiredColumns = array(
+        'new-pricing'   => array(),
+        'product-list'  => array(),
+    );
+
     /**
      * generate a new pricing list
      * 
@@ -21,10 +26,38 @@ class Price extends Controller
      */
     public function generateNewPricing(Request $oRequest)
     {
-        $oRequest->validate(array(
-            'product-list'  => 'required|mimes:csv,xls,xlsx',
-            'new-pricing'   => 'required|mimes:csv,xls,xlsx'
-        ));
+        $aRules = array(
+            'product-list'      => 'required|mimes:csv,xls,xlsx',
+            'new-pricing'       => 'required|mimes:csv,xls,xlsx',
+            'product-type'      => 'required',
+            'product-type-2'    => 'required',
+            'product-price-id'  => 'required',
+            'product-id'        => 'required',
+            'price-price-id'    => 'required',
+            'price-new-price'   => 'required',
+            'price-pack'        => 'required',
+            'price-change'      => 'required'
+        );
+
+        if ($oRequest->input('price-multiple-sheets')) {
+            $aRules['price-sheet-name']  = 'required';
+        }
+
+        $this->aRequiredColumns['new-pricing'] = array(
+            $oRequest->input('price-price-id'),
+            $oRequest->input('price-new-price'),
+            $oRequest->input('price-pack'),
+            $oRequest->input('price-change')
+        );
+
+        $this->aRequiredColumns['product-list'] = array(
+            $oRequest->input('product-type'),
+            $oRequest->input('product-type-2'),
+            $oRequest->input('product-price-id'),
+            $oRequest->input('product-id')
+        );
+
+        $oRequest->validate($aRules);
 
         $aResult = $this->validateHeaders($oRequest);
 
@@ -85,15 +118,10 @@ class Price extends Controller
      */
     public function checkColumns($aHeadings, $sType)
     {
-        $aRequiredColumns = array(
-            'new-pricing'   => array('future_price', 'pack_uom', 'change', 'sku'),
-            'product-list'  => array('type', 'attribute_1_values', 'parent', 'id'),
-        );
-
         $aMissingColumns = array();
 
         $bIsComplete = true;
-        foreach ($aRequiredColumns[$sType] as $sColumn) {
+        foreach ($this->aRequiredColumns[$sType] as $sColumn) {
             if (!in_array($sColumn, $aHeadings)) {
                 array_push($aMissingColumns, $sColumn);
                 $bIsComplete = false;
