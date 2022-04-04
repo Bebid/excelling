@@ -52,9 +52,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-5 p-0">
+                <div class="col-5 p-0 border-start" style="height: 100vh; overflow: auto;">
                     <div class="accordion" id="accordion-settings">
-                        <div class="accordion-item">
+                        <div class="accordion-item rounded-0 border-start-0">
                             <h2 class="accordion-header" id="accheader-product-list">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accbody-product-list" aria-expanded="true" aria-controls="accbody-product-list">
                                     Products
@@ -97,7 +97,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="accordion-item">
+                        <div class="accordion-item rounded-0 border-start-0">
                             <h2 class="accordion-header" id="accheader-pricing-list">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#accbody-pricing-list" aria-expanded="true" aria-controls="accbody-pricing-list">
                                     Pricing
@@ -105,6 +105,7 @@
                             </h2>
                             <div id="accbody-pricing-list" class="accordion-collapse collapse show" aria-labelledby="accheader-pricing-list">
                                 <div class="accordion-body">
+                                    <!--
                                     <div class="form-check mb-3">
                                         <input type="checkbox" class="form-check-input" name="price-multiple-sheets" value="1" id="check-multiple-sheets"
                                             {{ old('price-multiple-sheets') == '1' ? 'checked' : '' }}>
@@ -118,6 +119,7 @@
                                                 <div class="invalid-feedback" id="productListValidation">{{$message}}</div>
                                         @enderror
                                     </div>
+    -->
                                     <div class="mb-3">
                                         <label for="price-price-id" class="form-label">Price Id</label>
                                         <input type="text" name="price-price-id" class="form-control @error('price-price-id') is-invalid @enderror" 
