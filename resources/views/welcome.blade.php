@@ -24,10 +24,10 @@
         @csrf
         <div class="container-fluid">
             <div class="row">
-                <div class="col-7 align-self-center">
+                <div class="col-md-7 align-self-center py-5">
                     <div class="container">
                         <div class="row justify-content-center">
-                            <div class="card col-8">
+                            <div class="card col-md-6">
                                 <div class="card-body">
                                     <h5 class="card-title">Upload Files</h5>
                                     <div class="card-text">
@@ -52,7 +52,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-5 p-0 border-start" style="height: 100vh; overflow: auto;">
+                <div class="col-md-5 p-0 border-start" style="height: 100vh; overflow: auto;">
                     <div class="accordion" id="accordion-settings">
                         <div class="accordion-item rounded-0 border-start-0">
                             <h2 class="accordion-header" id="accheader-product-list">
