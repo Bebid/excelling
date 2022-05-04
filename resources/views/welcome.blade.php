@@ -89,7 +89,7 @@
                                     <div class="mb-3">
                                         <label for="product-type-2" class="form-label">Multiplier Type</label>
                                         <input type="text" name="product-type-2" class="form-control @error('product-type-2') is-invalid @enderror" 
-                                            value="{{old('product-type-2', 'attribute_1_value')}}">
+                                            value="{{old('product-type-2', 'attribute_1_values')}}">
                                         @error('product-type-2')
                                                 <div class="invalid-feedback" id="productListValidation">{{$message}}</div>
                                         @enderror

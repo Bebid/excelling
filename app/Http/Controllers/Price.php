@@ -27,8 +27,8 @@ class Price extends Controller
     public function generateNewPricing(Request $oRequest)
     {
         $aRules = array(
-            'product-list'      => 'required|mimes:csv,xls,xlsx',
-            'new-pricing'       => 'required|mimes:csv,xls,xlsx',
+            'product-list'      => 'required',
+            'new-pricing'       => 'required',
             'product-type'      => 'required',
             'product-type-2'    => 'required',
             'product-price-id'  => 'required',
