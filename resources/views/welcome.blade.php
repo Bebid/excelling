@@ -63,7 +63,7 @@
                             <div id="accbody-product-list" class="accordion-collapse collapse show" aria-labelledby="accheader-product-list">
                                 <div class="accordion-body">
                                     <div class="mb-3">
-                                        <label for="product-id" class="form-label">Product Id</label>
+                                        <label for="product-id" class="form-label">Product Id (Unique ID of the product)</label>
                                         <input type="text" name="product-id" class="form-control @error('product-id') is-invalid @enderror" 
                                         value="{{old('product-id', 'id')}}">
                                         @error('product-id')
@@ -71,7 +71,7 @@
                                         @enderror
                                     </div>
                                     <div class="mb-3">
-                                        <label for="product-price-id" class="form-label">Price Id</label>
+                                        <label for="product-price-id" class="form-label">Price Id (SKU)</label>
                                         <input type="text" name="product-price-id" class="form-control @error('product-price-id') is-invalid @enderror" 
                                             value="{{old('product-price-id', 'parent')}}">
                                         @error('product-price-id')
@@ -79,7 +79,7 @@
                                         @enderror
                                     </div>
                                     <div class="mb-3"> 
-                                        <label for="product-type" class="form-label">Type</label>
+                                        <label for="product-type" class="form-label">Type (Column that determines that the product is simple, variable, variation)</label>
                                         <input type="text" name="product-type" class="form-control @error('product-type') is-invalid @enderror" 
                                             value="{{old('product-type', 'type')}}"/>
                                         @error('product-type')
@@ -87,7 +87,7 @@
                                         @enderror
                                     </div>
                                     <div class="mb-3">
-                                        <label for="product-type-2" class="form-label">Multiplier Type</label>
+                                        <label for="product-type-2" class="form-label">Multiplier Type (Column that determines that the product is single or with case)</label>
                                         <input type="text" name="product-type-2" class="form-control @error('product-type-2') is-invalid @enderror" 
                                             value="{{old('product-type-2', 'attribute_1_values')}}">
                                         @error('product-type-2')
