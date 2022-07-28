@@ -33,6 +33,7 @@ class Price extends Controller
      */
     public function generateNewPricing(Request $oRequest)
     {
+        set_time_limit(0);
 
         $aRules = array(
             'type'          => 'required|in:wooc,bigc',
