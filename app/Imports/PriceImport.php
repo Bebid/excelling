@@ -8,6 +8,15 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 class PriceImport implements ToModel, WithHeadingRow
 {
     private $aRecords = array();
+    private $sType = 'wooc';
+
+    /**
+     * constructor
+     */
+    public function __construct($sType)
+    {
+        $this->sType = $sType;
+    }
     
     /**
     * @param array $rows
@@ -19,8 +28,10 @@ class PriceImport implements ToModel, WithHeadingRow
             'pack_uom'      => $aRow['pack_uom'],
             'change'        => $aRow['change']
         );
+
+        $sCommonId = ($this->sType === 'wooc') ? 'sku' : 'upc';
         if ($aRowMinimize['change'] !== floatval(0)) {
-            $this->aRecords[$aRow['sku']] = $aRowMinimize;
+            $this->aRecords[$aRow[$sCommonId]] = $aRowMinimize;
         }
     }
 

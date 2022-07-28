@@ -13,8 +13,15 @@ use Maatwebsite\Excel\HeadingRowImport;
 class Price extends Controller
 {
     private $aRequiredColumns = array(
-        'new-pricing'   => array(),
-        'product-list'  => array(),
+        'new-pricing' => array(
+            'sku', 'future_price', 'pack_uom', 'change'
+        ),
+        'old-pricing' => array(
+            'wooc' => array(
+                'id', 'parent', 'type', 'attribute_1_values', 'regular_price'
+            ),
+            'bigc' => array('product_upcean', 'product_name', 'price', 'product_id')
+        ),
     );
 
     /**
@@ -26,79 +33,55 @@ class Price extends Controller
      */
     public function generateNewPricing(Request $oRequest)
     {
+
         $aRules = array(
-            'product-list'      => 'required',
-            'new-pricing'       => 'required',
-            'product-type'      => 'required',
-            'product-type-2'    => 'required',
-            'product-price-id'  => 'required',
-            'product-id'        => 'required',
-            'price-price-id'    => 'required',
-            'price-new-price'   => 'required',
-            'price-pack'        => 'required',
-            'price-change'      => 'required'
-        );
-
-        if ($oRequest->input('price-multiple-sheets')) {
-            $aRules['price-sheet-name']  = 'required';
-        }
-
-        $this->aRequiredColumns['new-pricing'] = array(
-            $oRequest->input('price-price-id'),
-            $oRequest->input('price-new-price'),
-            $oRequest->input('price-pack'),
-            $oRequest->input('price-change')
-        );
-
-        $this->aRequiredColumns['product-list'] = array(
-            $oRequest->input('product-type'),
-            $oRequest->input('product-type-2'),
-            $oRequest->input('product-price-id'),
-            $oRequest->input('product-id')
+            'type'          => 'required|in:wooc,bigc',
+            'old-pricing'   => 'required',
+            'new-pricing'   => 'required',
         );
 
         $oRequest->validate($aRules);
 
-        $aResult = $this->validateHeaders($oRequest);
+        $aResult = $this->validateColumns($oRequest);
 
         if (!$aResult['valid']) {
             throw ValidationException::withMessages($aResult['messages']);
         }
 
-        $oPriceImport = new PriceImport();
+        $oPriceImport = new PriceImport($oRequest->type);
         Excel::import($oPriceImport, $oRequest->file('new-pricing'));
         
-        $oProductsImport = new ProductsImport($oPriceImport->getRecordsWithChange());
-        Excel::import($oProductsImport, $oRequest->file('product-list'));
+        $oProductsImport = new ProductsImport($oPriceImport->getRecordsWithChange(), $oRequest->type);
+        Excel::import($oProductsImport, $oRequest->file('old-pricing'));
 
-        return Excel::download(new ProductsExport($oProductsImport->aUpdated), 'new_prices.csv');
+        return Excel::download(new ProductsExport($oProductsImport->aUpdated), '[new-price] ' . $oRequest->file('old-pricing')->getClientOriginalName());
     }
 
     /**
-     * validate headers
+     * validate columns
      * 
      * @param   object  $oRequest
      * 
      * @param   array
      */
-    public function validateHeaders($oRequest)
+    public function validateColumns($oRequest)
     {
         $aErrorMessages = array();
         $aWithError = false;
 
         $aHeadings = (new HeadingRowImport(3))->toArray($oRequest->file('new-pricing'));
-        $aResult = $this->checkColumns($aHeadings[0][0], 'new-pricing');
+        $aResult = $this->checkColumns($aHeadings[0][0], $this->aRequiredColumns['new-pricing']);
 
         if (!$aResult['is_complete']) {
             $aErrorMessages['new-pricing'] = 'Following columns are missing; ' . implode(', ', $aResult['missing_columns']);
             $aWithError = true;
         }
 
-        $aHeadings = (new HeadingRowImport)->toArray($oRequest->file('product-list'));
-        $aResult = $this->checkColumns($aHeadings[0][0], 'product-list');
+        $aHeadings = (new HeadingRowImport)->toArray($oRequest->file('old-pricing'));
+        $aResult = $this->checkColumns($aHeadings[0][0], $this->aRequiredColumns['old-pricing'][$oRequest->type]);
 
         if (!$aResult['is_complete']) {
-            $aErrorMessages['product-list'] = 'Following columns are missing; ' . implode(', ', $aResult['missing_columns']);
+            $aErrorMessages['old-pricing'] = 'Following columns are missing; ' . implode(', ', $aResult['missing_columns']);
             $aWithError = true;
         }
 
@@ -116,12 +99,12 @@ class Price extends Controller
      * 
      * @return  array
      */
-    public function checkColumns($aHeadings, $sType)
+    public function checkColumns($aHeadings, $aRequiredColumns)
     {
         $aMissingColumns = array();
 
         $bIsComplete = true;
-        foreach ($this->aRequiredColumns[$sType] as $sColumn) {
+        foreach ($aRequiredColumns as $sColumn) {
             if (!in_array($sColumn, $aHeadings)) {
                 array_push($aMissingColumns, $sColumn);
                 $bIsComplete = false;
