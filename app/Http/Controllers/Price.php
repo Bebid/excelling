@@ -34,6 +34,7 @@ class Price extends Controller
     public function generateNewPricing(Request $oRequest)
     {
         set_time_limit(0);
+        ini_set('memory_limit', '500M');
 
         $aRules = array(
             'type'          => 'required|in:wooc,bigc',
