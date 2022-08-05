@@ -4,8 +4,9 @@ namespace App\Imports;
 
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithChunkReading;
 
-class PriceImport implements ToModel, WithHeadingRow
+class PriceImport implements ToModel, WithHeadingRow, WithChunkReading
 {
     private $aRecords = array();
     private $sType = 'wooc';
@@ -43,5 +44,10 @@ class PriceImport implements ToModel, WithHeadingRow
     public function getRecordsWithChange()
     {
         return $this->aRecords;
+    }
+    
+    public function chunkSize(): int
+    {
+        return 1000;
     }
 }

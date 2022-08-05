@@ -81,15 +81,15 @@ class ProductsImport implements ToModel, WithHeadingRow, WithChunkReading
     {
         if (isset($this->aNewPrices[$aRow['product_upcean']]) === true) {
             $aExplodedValue = explode(' - ', $aRow['product_name']);
-            if (count($aExplodedValue) === 1) {
-                $aRowNewPrice = array(
-                    'product_id'    => $aRow['product_id'],
-                    'price' => $this->aNewPrices[$aRow['product_upcean']]['future_price'] * 1.5
-                );
-            } else if (count($aExplodedValue) > 1 && strstr(strtolower($aRow['product_name']), 'case')) {
+            if (count($aExplodedValue) > 1 && strstr(strtolower($aRow['product_name']), 'case')) {
                 $aRowNewPrice = array(
                     'product_id'    => $aRow['product_id'],
                     'price' => $this->aNewPrices[$aRow['product_upcean']]['future_price'] * $this->aNewPrices[$aRow['product_upcean']]['pack_uom'] * 1.5
+                );
+            } else {
+                $aRowNewPrice = array(
+                    'product_id'    => $aRow['product_id'],
+                    'price' => $this->aNewPrices[$aRow['product_upcean']]['future_price'] * 1.5
                 );
             }
             array_push($this->aUpdated, $aRowNewPrice);
