@@ -40,7 +40,7 @@ class Price extends Controller
             'type'          => 'required|in:wooc,bigc',
             'old-pricing'   => 'required',
             'new-pricing'   => 'required',
-            'markup'        => 'required' 
+            'multiplier'    => 'required' 
         );
 
         $oRequest->validate($aRules);
