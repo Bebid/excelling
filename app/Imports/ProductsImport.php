@@ -65,13 +65,15 @@ class ProductsImport implements ToModel, WithHeadingRow, WithChunkReading
                         'id'            => $aRow['id'],
                         'regular_price' => $this->aNewPrices[$aRow['parent']]['future_price'] * $this->fMultiplier
                     );
+                    array_push($this->aUpdated, $aRowNewPrice);
                 } else if (count($aExplodedValue) === 2 && strtolower($aExplodedValue[1]) === 'case') {
                     $aRowNewPrice = array(
                         'id'            => $aRow['id'],
                         'regular_price' => $this->aNewPrices[$aRow['parent']]['future_price'] * $this->aNewPrices[$aRow['parent']]['pack_uom'] * $this->fMultiplier
                     );
+                    array_push($this->aUpdated, $aRowNewPrice);
                 }
-                array_push($this->aUpdated, $aRowNewPrice);
+                
             }
         }
     }

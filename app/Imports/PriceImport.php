@@ -26,14 +26,11 @@ class PriceImport implements ToModel, WithHeadingRow, WithChunkReading
     {
         $aRowMinimize = array(
             'future_price'  => $aRow['future_price'],
-            'pack_uom'      => $aRow['pack_uom'],
-            'change'        => $aRow['change']
+            'pack_uom'      => $aRow['pack_uom']
         );
 
         $sCommonId = ($this->sType === 'wooc') ? 'sku' : 'upc';
-        if ($aRowMinimize['change'] !== floatval(0)) {
-            $this->aRecords[$aRow[$sCommonId]] = $aRowMinimize;
-        }
+        $this->aRecords[$aRow[$sCommonId]] = $aRowMinimize;
     }
 
     public function headingRow()

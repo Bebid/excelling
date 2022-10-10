@@ -14,7 +14,7 @@ class Price extends Controller
 {
     private $aRequiredColumns = array(
         'new-pricing' => array(
-            'sku', 'future_price', 'pack_uom', 'change'
+            'sku', 'future_price', 'pack_uom', 'upc'
         ),
         'old-pricing' => array(
             'wooc' => array(
