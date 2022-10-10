@@ -57,6 +57,13 @@
                                                     <div class="invalid-feedback" id="newPricingValidation">{{$message}}</div>
                                                 @enderror
                                             </div>
+                                            <div class="mb-3">
+                                                <label for="multiplier" class="form-label">Multiplier</label>
+                                                <input type="number" name="multiplier" class="form-control @error('multiplier') is-invalid @enderror" value="1.4" required>
+                                                @error('multiplier')
+                                                    <div class="invalid-feedback" id="multiplierValidation">{{$message}}</div>
+                                                @enderror
+                                            </div>
                                             <button class="btn btn-primary">Generate New Pricing</button>
                                         </div>
                                     </div>

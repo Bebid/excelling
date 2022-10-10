@@ -40,6 +40,7 @@ class Price extends Controller
             'type'          => 'required|in:wooc,bigc',
             'old-pricing'   => 'required',
             'new-pricing'   => 'required',
+            'markup'        => 'required' 
         );
 
         $oRequest->validate($aRules);
@@ -53,7 +54,7 @@ class Price extends Controller
         $oPriceImport = new PriceImport($oRequest->type);
         Excel::import($oPriceImport, $oRequest->file('new-pricing'));
         
-        $oProductsImport = new ProductsImport($oPriceImport->getRecordsWithChange(), $oRequest->type);
+        $oProductsImport = new ProductsImport($oPriceImport->getRecordsWithChange(), $oRequest->type, (float)$oRequest->multiplier);
         Excel::import($oProductsImport, $oRequest->file('old-pricing'));
 
         return Excel::download(new ProductsExport($oProductsImport->aUpdated), '[new-price] ' . $oRequest->file('old-pricing')->getClientOriginalName());

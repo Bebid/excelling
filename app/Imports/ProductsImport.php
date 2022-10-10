@@ -13,14 +13,16 @@ class ProductsImport implements ToModel, WithHeadingRow, WithChunkReading
     public $aUpdated = array();
     private $aNewPrices = array();
     private $sType = 'wooc';
+    private $fMultiplier = 1.5;
 
     /**
      * constructor
      * 
      * @param   array   $aNewPrices
      * @param   string  $sType
+     * @param   float   $fMultiplier
      */
-    public function __construct($aNewPrices, $sType)
+    public function __construct($aNewPrices, $sType, $fMultiplier)
     {
         $this->aNewPrices = $aNewPrices;
         $this->sType = $sType;
@@ -30,6 +32,8 @@ class ProductsImport implements ToModel, WithHeadingRow, WithChunkReading
         } else if ($sType === 'bigc') {
             array_push($this->aUpdated, array('Product ID', 'Price'));
         }
+
+        $this->fMultiplier = $fMultiplier;
     }
     
     /**
@@ -59,12 +63,12 @@ class ProductsImport implements ToModel, WithHeadingRow, WithChunkReading
                 if (strtolower($aRow['attribute_1_values']) === 'single') {
                     $aRowNewPrice = array(
                         'id'            => $aRow['id'],
-                        'regular_price' => $this->aNewPrices[$aRow['parent']]['future_price'] * 1.5
+                        'regular_price' => $this->aNewPrices[$aRow['parent']]['future_price'] * $this->fMultiplier
                     );
                 } else if (count($aExplodedValue) === 2 && strtolower($aExplodedValue[1]) === 'case') {
                     $aRowNewPrice = array(
                         'id'            => $aRow['id'],
-                        'regular_price' => $this->aNewPrices[$aRow['parent']]['future_price'] * $this->aNewPrices[$aRow['parent']]['pack_uom'] * 1.5
+                        'regular_price' => $this->aNewPrices[$aRow['parent']]['future_price'] * $this->aNewPrices[$aRow['parent']]['pack_uom'] * $this->fMultiplier
                     );
                 }
                 array_push($this->aUpdated, $aRowNewPrice);
@@ -84,12 +88,12 @@ class ProductsImport implements ToModel, WithHeadingRow, WithChunkReading
             if (count($aExplodedValue) > 1 && strstr(strtolower($aRow['product_name']), 'case')) {
                 $aRowNewPrice = array(
                     'product_id'    => $aRow['product_id'],
-                    'price' => $this->aNewPrices[$aRow['product_upcean']]['future_price'] * $this->aNewPrices[$aRow['product_upcean']]['pack_uom'] * 1.5
+                    'price' => $this->aNewPrices[$aRow['product_upcean']]['future_price'] * $this->aNewPrices[$aRow['product_upcean']]['pack_uom'] * $this->fMultiplier
                 );
             } else {
                 $aRowNewPrice = array(
                     'product_id'    => $aRow['product_id'],
-                    'price' => $this->aNewPrices[$aRow['product_upcean']]['future_price'] * 1.5
+                    'price' => $this->aNewPrices[$aRow['product_upcean']]['future_price'] * $this->fMultiplier
                 );
             }
             array_push($this->aUpdated, $aRowNewPrice);
