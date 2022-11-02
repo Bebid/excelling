@@ -29,7 +29,11 @@ class PriceImport implements ToModel, WithHeadingRow, WithChunkReading
             'pack_uom'      => $aRow['pack_uom']
         );
 
-        $sCommonId = ($this->sType === 'wooc') ? 'sku' : 'upc';
+        if ($this->sType === 'wooc') {
+            $sCommonId = (!empty($aRow['ukc'])) ? 'ukc' : 'upc';
+        } else {
+            $sCommonId = 'upc';
+        }
         $this->aRecords[$aRow[$sCommonId]] = $aRowMinimize;
     }
 

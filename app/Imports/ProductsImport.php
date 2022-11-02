@@ -57,23 +57,23 @@ class ProductsImport implements ToModel, WithHeadingRow, WithChunkReading
      */
     private function handleWoocProducts($aRow)
     {
+        $sNonEmptyId = (isset($this->aNewPrices[$aRow['parent']]) === true) ? 'parent' : 'upc';
         if ($aRow['type'] === 'variation') {
             $aExplodedValue = explode(' ', $aRow['attribute_1_values']);
-            if (isset($this->aNewPrices[$aRow['parent']]) === true) {
+            if (isset($this->aNewPrices[$aRow['parent']]) || isset($this->aNewPrices[$aRow['upc']])) {
                 if (strtolower($aRow['attribute_1_values']) === 'single') {
                     $aRowNewPrice = array(
                         'id'            => $aRow['id'],
-                        'regular_price' => $this->aNewPrices[$aRow['parent']]['future_price'] * $this->fMultiplier
+                        'regular_price' => $this->aNewPrices[$aRow[$sNonEmptyId]]['future_price'] * $this->fMultiplier
                     );
                     array_push($this->aUpdated, $aRowNewPrice);
                 } else if (count($aExplodedValue) === 2 && strtolower($aExplodedValue[1]) === 'case') {
                     $aRowNewPrice = array(
                         'id'            => $aRow['id'],
-                        'regular_price' => $this->aNewPrices[$aRow['parent']]['future_price'] * $this->aNewPrices[$aRow['parent']]['pack_uom'] * $this->fMultiplier
+                        'regular_price' => $this->aNewPrices[$aRow[$sNonEmptyId]]['future_price'] * $this->aNewPrices[$aRow[$sNonEmptyId]]['pack_uom'] * $this->fMultiplier
                     );
                     array_push($this->aUpdated, $aRowNewPrice);
                 }
-                
             }
         }
     }

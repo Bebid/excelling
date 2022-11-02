@@ -18,7 +18,7 @@ class Price extends Controller
         ),
         'old-pricing' => array(
             'wooc' => array(
-                'id', 'parent', 'type', 'attribute_1_values', 'regular_price'
+                'id', 'parent', 'type', 'attribute_1_values', 'regular_price', 'upc'
             ),
             'bigc' => array('product_upcean', 'product_name', 'price', 'product_id')
         ),
